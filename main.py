@@ -1,5 +1,13 @@
-# Build with:
-# pyinstaller --onefile --name autocharts main.py
+"""
+Autocharts - Background script for Falcon BMS
+
+Author: Max [Falconeers]
+
+Build with (pyinstaller must be installed):
+   "pyinstaller --onefile --name autocharts main.py"
+Prerequisite: AudioDeviceCmdlets must be installed:
+   "Install-Module -Name AudioDeviceCmdlets -Scope CurrentUser"
+"""
 
 import configparser
 import time
@@ -11,8 +19,8 @@ import subprocess
 import ctypes
 from ctypes import wintypes
 
-#TODO: Check whether the AudioDeviceCmdlets are installed. If not, install them.
 #TODO: Read the device IDs from the .ini file.
+#Findout in Powershell with: "Get-AudioDevice -List"
 HEADSET_OUT = "{0.0.0.00000000}.{cb14d36f-b009-486d-80da-969a87686254}"
 HEADSET_IN = "{0.0.1.00000000}.{c3432b0a-73bf-4f2d-8c31-b2d47104ebf9}"
 VR_OUT = "{0.0.0.00000000}.{5ebc4a12-f53a-4d1e-83a6-e1d95d30b2ae}"
