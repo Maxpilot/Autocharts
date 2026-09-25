@@ -11,8 +11,8 @@ import subprocess
 import ctypes
 from ctypes import wintypes
 
-# TODO: Prüfen, ob die AudioDeviceCmdlets installiert sind. Wenn nicht, installieren
-# TODO: Einlesen der IDs ueber .ini
+#TODO: Check whether the AudioDeviceCmdlets are installed. If not, install them.
+#TODO: Read the device IDs from the .ini file.
 HEADSET_OUT = "{0.0.0.00000000}.{cb14d36f-b009-486d-80da-969a87686254}"
 HEADSET_IN = "{0.0.1.00000000}.{c3432b0a-73bf-4f2d-8c31-b2d47104ebf9}"
 VR_OUT = "{0.0.0.00000000}.{5ebc4a12-f53a-4d1e-83a6-e1d95d30b2ae}"
@@ -107,8 +107,8 @@ def clear_directory(directory):
 
 def copy_recursive(src, dst):
     """
-    Kopiert alle Dateien und Unterverzeichnisse von src nach dst.
-    src und dst sollten Path-Objekte oder Strings sein.
+    Copies all files and subdirectories from src to dst.
+    src and dst should be Path objects or strings.
     """
     src = Path(src)
     dst = Path(dst)
@@ -126,11 +126,11 @@ def datachartzerlegen(dds_path):
     mode = "creating datacard"
     print(mode + " ...\n")
     """
-    Liest eine DDS-Datei, teilt sie horizontal in zwei Hälften,
-    skaliert jede Hälfte in der Breite um Faktor 1.2 und speichert als PNG.
-
-    :param dds_path: Pfad zur DDS-Datei
-    :param output_prefix: Präfix für die Ausgabedateien
+    Reads a DDS file, splits it horizontally into two halves,
+    scales each half by a factor of 1.2 in width, and saves them as PNG files.
+    
+    :param dds_path: Path to the DDS file
+    :param output_prefix: Prefix for the output files
     """
     # DDS einlesen
     im = Image.open(dds_path)
@@ -162,12 +162,12 @@ def datachartzerlegen(dds_path):
 
 
 def kill_all_instances(name):
-    """Alle Instanzen eines Prozesses beenden und warten, bis keine mehr laufen."""
+    """Terminate all instances of a process and wait until none are still running."""
     try:
         # Versucht alle Instanzen zu beenden (/F = erzwingen, /IM = nach Name)
         subprocess.run(["taskkill", "/F", "/IM", name], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     except Exception as e:
-        print(f"Fehler beim Beenden von {name}: {e}")
+        print(f"Error terminating {name}: {e}")
 
     # Sicherstellen, dass wirklich nichts mehr läuft
     while True:
@@ -181,7 +181,7 @@ def kill_all_instances(name):
 
 
 def start_process(path):
-    """Startet den Prozess neu."""
+    """Restarts the process."""
     print(f"Starte {path} ...")
     return subprocess.Popen([path])
 
@@ -210,7 +210,7 @@ def check_audio_devices():
 
     if result.returncode != 0:
         raise RuntimeError(
-            "AudioDeviceCmdlets konnte nicht geladen werden:\n" + result.stderr.strip()
+            "Failed to load AudioDeviceCmdlets:\n" + result.stderr.strip()
         )
 
     devices = {}
@@ -229,7 +229,7 @@ def check_audio_devices():
         ("VR Input", VR_IN, "Recording"),
     ]
 
-    print("Audio-Geräte:")
+    print("Audio-Devices:")
     missing = False
 
     for label, device_id, expected_type in expected:
@@ -239,15 +239,15 @@ def check_audio_devices():
             print(f"  ✗ {label}")
             missing = True
         elif device[1] != expected_type:
-            print(f"  ✗ {label} (falscher Typ: {device[1]})")
+            print(f"  ✗ {label} (wrong type: {device[1]})")
             missing = True
         else:
             print(f"  ✓ {label}: {device[0]}")
 
     if missing:
-        raise RuntimeError("Mindestens ein benötigtes Audio-Gerät fehlt.")
+        raise RuntimeError("At least one required audio device is missing.")
 
-    print("Audio-Geräte: OK\n")
+    print("Audio-Devices: OK\n")
 
 
 def toggle_audio():
@@ -319,8 +319,8 @@ if __name__ == "__main__":
     # Initialisierung der Standard Ein- Ausgabegeraete Umschaltung
     user32 = ctypes.windll.user32
     if not user32.RegisterHotKey(None, HOTKEY_ID, 0, VK_F4):
-        raise RuntimeError("F4 konnte nicht registriert werden")
-    print("F4 Hotkey registriert")
+        raise RuntimeError("Failed to register F4.")
+    print("F4 Hotkey registered for audio device switching.\n")
     check_audio_devices()
 
     while True:
